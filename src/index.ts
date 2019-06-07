@@ -5,17 +5,20 @@ import helmet = require("helmet");
 import dotenv from "dotenv";
 import cookieSession from "cookie-session";
 import cookieParser from "cookie-parser";
+import { rSession } from "./modules/session/routes";
+import { rIntents } from "./modules/intents/routes";
+import { rEntity } from './modules/entity/routes';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 
 app.use(
   cors({
     origin: "*",
-    exposedHeaders: "Authorization"
+    exposedHeaders: "authorization"
   })
 );
 
@@ -38,6 +41,23 @@ app.use(helmet());
 
 app.use(compression());
 
+app.use(require("morgan")("dev"));
+
+routes(app);
+
 app.listen(PORT, () => {
   console.log("Server is running on port " + PORT);
 });
+
+function routes(app: express.Application) {
+  function router() {
+    return express.Router({
+      caseSensitive: true
+    });
+  }
+
+  app.use("/api/v1/entity", rEntity(router()));
+
+  app.use("/api/v1/intent", rIntents(router()));
+  app.use("/api/v1/session", rSession(router()));
+}

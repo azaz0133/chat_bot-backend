@@ -1,13 +1,12 @@
-import firebase from 'firebase'
+import admin from 'firebase-admin'
+const sa = require('../../smartbiz-2ce3e-1fc73e5281b6.json');
 
-firebase.initializeApp({
-    apiKey: process.env.API_KEY,
-    authDomain: process.env.AUTH_DOMAIN,
-    databaseURL: process.env.DATEBASE_URL,
-    projectId: process.env.PROJECT,
-    storageBucket: process.env.STORAGEBUCKET,
-    messagingSenderId: process.env.MESSAGEGING,
-    appId: process.env.APP_ID
-})
+require('@google-cloud/firestore');
 
-export default firebase
+admin.initializeApp({
+  credential: admin.credential.cert(sa),
+  databaseURL: 'https://smartbiz-2ce3e.firebaseio.com',
+});
+
+const firestore = admin.firestore();
+export default firestore
