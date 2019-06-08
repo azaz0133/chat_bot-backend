@@ -19,12 +19,31 @@ export class MIntents {
       INFO("Convert data intents");
       const results = (data as Array<any>).map(d => {
         return {
-          parameters: d["parameters"]
+          displayName: d["displayName"]
         };
       });
       return results;
     } catch (error) {
       throw seperateError(error, __dirname + 28);
+    }
+  };
+
+  public findOne = async (name: string) => {
+    try {
+      INFO("GET ALL WITH FUNCTION GET ALL INTENTS ");
+      const getAll = await this.findAll();
+      INFO("START FILTER TEXT");
+      const results = getAll.filter(({ displayName }) => {
+        return (
+          (displayName as string).substr(0, name.length).toLowerCase() ==
+          name.toLowerCase()
+        );
+      });
+      if (results.length == 0) {
+        return [];
+      } else return results;
+    } catch (error) {
+      throw seperateError(error, __dirname + 36);
     }
   };
 

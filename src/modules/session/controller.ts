@@ -35,7 +35,7 @@ export class CSession {
         })
         .status(201);
     } catch (error) {
-        console.log(error);
+        console.log(error.message);
         return res.status(404).json({
             status:"fail",
             message: error.message
