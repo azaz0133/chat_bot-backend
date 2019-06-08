@@ -1,5 +1,6 @@
 import { MSession } from "./model";
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
 export class CSession {
   private model: MSession;
@@ -18,6 +19,28 @@ export class CSession {
 
   // }
 
+  public authen = async (req: Request, res: Response, next: NextFunction) => {
+    const { authorization } = req.headers;
+    if (!authorization) {
+      return res.status(403).json({
+        status: "fail",
+        message: "authentication fail"
+      });
+    }
+
+    try {
+      const token = authorization.split(" ");
+      jwt.verify(token[2], process.env.SECRET_KEY || "test");
+      return next();
+    } catch (error) {
+      return res.status(403).json({
+        statusCode: "403",
+        message: error.message,
+        status: "authentication failure "
+      });
+    }
+  };
+
   public login = async (req: Request, res: Response) => {
     try {
       const token: string = await this.model.authen(
@@ -31,15 +54,15 @@ export class CSession {
         .json({
           status: "logged in",
           message: "sent token already",
-          token
+          token: "Bearer " + token
         })
         .status(201);
     } catch (error) {
-        console.log(error.message);
-        return res.status(404).json({
-            status:"fail",
-            message: error.message
-        });
+      console.log(error.message);
+      return res.status(404).json({
+        status: "fail",
+        message: error.message
+      });
     }
   };
 
@@ -56,8 +79,8 @@ export class CSession {
     } catch (error) {
       console.log(error);
       return res.json({
-          status:"fail",
-          message: error.message
+        status: "fail",
+        message: error.message
       });
     }
   };
