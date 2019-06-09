@@ -9,18 +9,34 @@ export class CEntity {
   }
 
   public getAll = async (req: Request, res: Response) => {
-    try {
-      const results = await this._model.findAll();
-      return res.status(200).json({
-        status: "ok",
-        message: "get all entities",
-        results
-      });
-    } catch (error) {
-      return res.status(400).json({
-        status: "fail",
-        message: error.message
-      });
+    if (req.query.displayName != undefined) {
+        try {
+            const result = await this._model.findOne(req.query.displayName)
+            return res.status(200).json({
+              status: "ok",
+              message: "get entities",
+              result
+            });
+          } catch (error) {
+            return res.status(400).json({
+              status: "fail",
+              message: error.message
+            });
+          }
+    } else {
+      try {
+        const results = await this._model.findAll();
+        return res.status(200).json({
+          status: "ok",
+          message: "get all entities",
+          results
+        });
+      } catch (error) {
+        return res.status(400).json({
+          status: "fail",
+          message: error.message
+        });
+      }
     }
   };
 
@@ -33,8 +49,6 @@ export class CEntity {
         message: "wrong data"
       });
     }
-
-    console.log(req.body);
 
     try {
       const result = await this._model.addEntity(displayName, entities);

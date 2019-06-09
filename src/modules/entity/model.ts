@@ -16,11 +16,26 @@ export class MEntity {
         throw new Error("Something Wrong");
       }
       INFO("start map data for return");
-      const results = (data as Array<any>).map(d => d);
+      const results = (data as Array<any>).map(d => ({
+        displayName: d["displayName"],
+        entites: d["entities"].map(m => ({
+          value: m["value"],
+          synonyms: m["synonyms"]
+        }))
+      }));
       return results;
     } catch (error) {
       throw seperateError(error, __dirname + 18);
     }
+  };
+
+  public findOne = async (displayName: string) => {
+    const data = await this.findAll();
+    return data.filter(
+      d =>
+        (d.displayName as string).substr(0, displayName.length).toLowerCase() ==
+        displayName.toLowerCase()
+    );
   };
 
   public addEntity = async (displayName: string, entities: IEntity[]) => {
