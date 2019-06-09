@@ -9,6 +9,6 @@ COPY . .
 RUN npm install -g yarn && \
     yarn install
 
-EXPOSE 8080
+EXPOSE 3001
 
 CMD [ "yarn","run","start:dev" ]
