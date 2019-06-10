@@ -7,7 +7,8 @@ import cookieSession from "cookie-session";
 import cookieParser from "cookie-parser";
 import { rSession } from "./modules/session/routes";
 import { rIntents } from "./modules/intents/routes";
-import { rEntity } from './modules/entity/routes';
+import { rEntity } from "./modules/entity/routes";
+import { rTest } from "./modules/test/routes";
 
 dotenv.config();
 
@@ -55,6 +56,8 @@ function routes(app: express.Application) {
       caseSensitive: true
     });
   }
+
+  app.use("/api/v1/test_message", rTest(router()));
 
   app.use("/api/v1/entity", rEntity(router()));
 
