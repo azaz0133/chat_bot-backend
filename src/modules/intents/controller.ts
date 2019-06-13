@@ -40,4 +40,25 @@ export class CIntents {
       });
     }
   };
+
+  public createIntent = async (req: Request, res: Response) => {
+    try {
+      const { training_phrases, parameter, displayName } = req.body;
+      const result = await this._model.create(
+        displayName,
+        training_phrases,
+        parameter
+      );
+      return res.status(201).json({
+        status: "created",
+        message: "create intent success",
+        result
+      });
+    } catch (error) {
+      return res.status(400).json({
+        status: "error",
+        message: error.message
+      });
+    }
+  };
 }
