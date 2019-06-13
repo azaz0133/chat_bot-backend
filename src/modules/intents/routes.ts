@@ -5,6 +5,7 @@ export function rIntents(router: Router) {
   const controller = new CIntents();
   router.get("/", controller.getAll);
   router.get("/:displayName", controller.getByDisplayName);
+  router.post("/", controller.createIntent);
 
   return router;
 }
